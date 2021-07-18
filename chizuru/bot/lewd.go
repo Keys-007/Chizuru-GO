@@ -25,9 +25,9 @@ func nekosLIFE(b *gotgbot.Bot, ctx *ext.Context) (err error) {
 				return err
 			}
 			mimeType := getType(pic.URL)
-			if mimeType == "image/jpeg" {
+			if mimeType == "image/jpeg" || mimeType == "image/png" || mimeType == "image/apng" || mimeType == "image/webp" {
 				_, err = b.SendPhoto(ctx.EffectiveChat.Id, pic.URL, &gotgbot.SendPhotoOpts{})
-			} else if mimeType == "image/gif" {
+			} else if mimeType == "image/gif" || mimeType == "video/mp4" {
 				_, err = b.SendAnimation(ctx.EffectiveChat.Id, pic.URL, &gotgbot.SendAnimationOpts{})
 			} else {
 				_, err = b.SendMessage(ctx.EffectiveChat.Id, fmt.Sprintf("Type <code>%s</code> not yet handled", mimeType), &gotgbot.SendMessageOpts{ParseMode: "html"})
