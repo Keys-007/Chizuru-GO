@@ -20,12 +20,12 @@ func getE621(b *gotgbot.Bot, ctx *ext.Context) (err error) {
 			_, err = ctx.EffectiveMessage.Reply(b, msg, &gotgbot.SendMessageOpts{})
 			return err
 		} else {
-			msg = fmt.Sprintf("<b>ID</b>: <code>%d</code>\n", fur.Posts[0].ID)
-			msg += fmt.Sprintf("<b>Rating</b>: <code>%s</code>\n", fur.Posts[0].Rating)
-			msg += fmt.Sprintf("<b>Description</b>: <code>%s<code>\n", fur.Posts[0].Description)
-			msg += fmt.Sprintf("<b>Tags</b>: <code>%s</code>\n", fur.Posts[0].Tags.General)
+			msg = fmt.Sprintf("*ID*: `%d`\n", fur.Posts[0].ID)
+			msg += fmt.Sprintf("*Rating*: `%s`\n", fur.Posts[0].Rating)
+			msg += fmt.Sprintf("*Description*: `%s`\n", fur.Posts[0].Description)
+			msg += fmt.Sprintf("*Tags*: `%s`", fur.Posts[0].Tags.General)
 
-			_, err = b.SendPhoto(ctx.EffectiveChat.Id, fur.Posts[0].File.URL, &gotgbot.SendPhotoOpts{ParseMode: "html", Caption: msg})
+			_, err = b.SendPhoto(ctx.EffectiveChat.Id, fur.Posts[0].File.URL, &gotgbot.SendPhotoOpts{ParseMode: "markdownv2", Caption: msg})
 			return err
 		}
 
