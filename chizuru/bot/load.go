@@ -12,5 +12,6 @@ func LoadHandlers(d *ext.Dispatcher) {
 	d.AddHandler(handlers.NewCommand("nekos", nekosLIFE))
 	d.AddHandler(handlers.NewCommand("help", getHelp))
 	d.AddHandler(handlers.NewCommand("stats", getStats))
+	d.AddHandler(handlers.NewCommand("e621", getE621))
 	d.AddHandler(handlers.NewMessage(filters.All, logStuff))
 }
