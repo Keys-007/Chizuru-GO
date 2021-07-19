@@ -7,6 +7,14 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 )
 
+func getTagsMD(tags_list []string) string {
+	var txt string
+	for _, t := range tags_list {
+		txt += fmt.Sprintf("`#%s` ", t)
+	}
+	return txt
+}
+
 func getE621(b *gotgbot.Bot, ctx *ext.Context) (err error) {
 	args := ctx.Args()
 	if len(args) == 1 {
@@ -23,9 +31,19 @@ func getE621(b *gotgbot.Bot, ctx *ext.Context) (err error) {
 			msg = fmt.Sprintf("*ID*: `%d`\n", fur.Posts[0].ID)
 			msg += fmt.Sprintf("*Rating*: `%s`\n", fur.Posts[0].Rating)
 			msg += fmt.Sprintf("*Description*: `%s`\n", fur.Posts[0].Description)
-			msg += fmt.Sprintf("*Tags*: `%s`", fur.Posts[0].Tags.General)
+			msg += fmt.Sprintf("*Tags*: %s", getTagsMD(fur.Posts[0].Tags.General))
 
-			_, err = b.SendPhoto(ctx.EffectiveChat.Id, fur.Posts[0].File.URL, &gotgbot.SendPhotoOpts{ParseMode: "markdownv2", Caption: msg})
+			r, err := b.SendPhoto(ctx.EffectiveChat.Id, fur.Posts[0].File.URL, &gotgbot.SendPhotoOpts{ParseMode: "markdownv2", Caption: msg,
+				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
+					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{{
+						{Text: "Url", Url: fur.Posts[0].File.URL},
+					}},
+				}})
+
+			if r == nil {
+				_, err = ctx.EffectiveMessage.Reply(b, "No results to be sent.", &gotgbot.SendMessageOpts{})
+				return err
+			}
 			return err
 		}
 
