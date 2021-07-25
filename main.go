@@ -4,13 +4,14 @@ import (
 	"Chizuru-GO/chizuru/bot"
 	"Chizuru-GO/chizuru/config"
 	"Chizuru-GO/chizuru/database"
+	"Chizuru-GO/chizuru/telegraph"
+	"fmt"
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/bigkevmcd/go-configparser"
 	"log"
 	"net/http"
 )
-
 
 func main() {
 	p, err := configparser.NewConfigParserFromFile("chizuru.cfg")
@@ -43,10 +44,16 @@ func main() {
 	}
 	database.StartDB()
 	database.EnsureBotInDb(b)
+	tf, err := telegraph.Register(b.User.FirstName, b.User.Username, fmt.Sprintf("https://t.me/%s", b.User.Username))
+	if err != nil {
+		log.Fatalf("Error while registering on telegra.ph: %s", err.Error())
+		return
+	}
+	config.TelegraphToken = tf.Result.AccessToken
 
+	log.Printf("Logged in to telegra.ph as %s", tf.Result.AuthorName)
 	log.Printf("%s has been started...\n", b.User.Username)
 
 	// Idle, to keep updates coming in, and avoid bot stopping.
 	updater.Idle()
 }
-

@@ -9,6 +9,7 @@ var ChatLINK string
 var ChannelLINK string
 var DBUrl string
 var OwnerID int64
+var TelegraphToken string
 
 func SetVars(p *configparser.ConfigParser) {
 	var err error
